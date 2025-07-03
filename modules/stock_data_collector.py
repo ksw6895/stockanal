@@ -4,10 +4,6 @@ import numpy as np
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 import logging
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn
-
-console = Console()
 
 class StockDataCollector:
     def __init__(self):
@@ -25,15 +21,8 @@ class StockDataCollector:
             Dict: 주식 데이터 딕셔너리
         """
         try:
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                console=console,
-                transient=True,
-            ) as progress:
-                task = progress.add_task(f"[cyan]{symbol} 데이터 수집 중...", total=None)
-                
-                stock = yf.Ticker(symbol)
+            print(f"📊 {symbol} 데이터 수집 중...")
+            stock = yf.Ticker(symbol)
                 
                 # 기본 정보
                 info = stock.info
@@ -187,21 +176,21 @@ class StockDataCollector:
         results = {}
         failed_symbols = []
         
-        console.print(f"[bold blue]총 {len(symbols)}개 종목 데이터 수집 시작[/bold blue]")
+        print(f"📊 총 {len(symbols)}개 종목 데이터 수집 시작")
         
         for i, symbol in enumerate(symbols, 1):
             try:
-                console.print(f"[cyan]({i}/{len(symbols)}) {symbol} 처리 중...[/cyan]")
+                print(f"📈 ({i}/{len(symbols)}) {symbol} 처리 중...")
                 results[symbol] = self.get_stock_data(symbol, period)
-                console.print(f"[green]✓ {symbol} 완료[/green]")
+                print(f"✅ {symbol} 완료")
             except Exception as e:
                 failed_symbols.append(symbol)
-                console.print(f"[red]✗ {symbol} 실패: {str(e)}[/red]")
+                print(f"❌ {symbol} 실패: {str(e)}")
         
         if failed_symbols:
-            console.print(f"[yellow]실패한 종목: {', '.join(failed_symbols)}[/yellow]")
+            print(f"⚠️ 실패한 종목: {', '.join(failed_symbols)}")
         
-        console.print(f"[bold green]데이터 수집 완료: {len(results)}/{len(symbols)} 성공[/bold green]")
+        print(f"🎉 데이터 수집 완료: {len(results)}/{len(symbols)} 성공")
         
         return results
     

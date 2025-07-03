@@ -4,10 +4,9 @@ import logging
 from typing import Dict, List, Optional, Any
 from google import genai
 from google.genai import types
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn
+# Rich imports removed for server compatibility
 
-console = Console()
+# Console removed for server compatibility
 
 class GeminiClient:
     def __init__(self, api_key: Optional[str] = None):
@@ -43,15 +42,9 @@ class GeminiClient:
             str: 생성된 분석 보고서
         """
         try:
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                console=console,
-                transient=True,
-            ) as progress:
-                task = progress.add_task("[cyan]AI 분석 중...", total=None)
-                
-                # 주식 데이터를 텍스트로 변환
+            print("🤖 AI 분석 요청 중...")
+            
+            # 주식 데이터를 텍스트로 변환
                 formatted_data = self._format_stock_data(stock_data)
                 
                 # 최종 프롬프트 구성
@@ -225,15 +218,9 @@ class GeminiClient:
                 )
             )
             
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                console=console,
-                transient=True,
-            ) as progress:
-                task = progress.add_task("[cyan]비교 분석 중...", total=None)
-                
-                response = self.client.models.generate_content(
+            print("🔄 비교 분석 중...")
+            
+            response = self.client.models.generate_content(
                     model=self.model_name,
                     contents=full_prompt,
                     config=config

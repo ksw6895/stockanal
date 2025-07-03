@@ -5,10 +5,9 @@ from typing import Dict, List, Optional, Tuple
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 from enum import Enum
-from rich.console import Console
-from rich.table import Table
+# Rich imports removed for server compatibility
 
-console = Console()
+# Console removed for server compatibility
 
 class InvestmentGrade(Enum):
     STRONG_BUY = "Strong Buy"
@@ -489,35 +488,21 @@ class ValueAnalyzer:
         
         return analysis.strip()
     
-    def create_analysis_summary_table(self, results: List[AnalysisResult]) -> Table:
-        """분석 결과 요약 테이블을 생성합니다."""
-        table = Table(title="가치투자 분석 결과 요약")
-        
-        table.add_column("종목", style="cyan")
-        table.add_column("등급", style="bold")
-        table.add_column("현재가", style="green")
-        table.add_column("목표가", style="blue")
-        table.add_column("상승여력", style="magenta")
-        table.add_column("PER", style="yellow")
-        table.add_column("PBR", style="yellow")
-        table.add_column("ROE", style="yellow")
+    def create_analysis_summary_table(self, results: List[AnalysisResult]) -> str:
+        """분석 결과 요약을 텍스트로 생성합니다."""
+        summary = "가치투자 분석 결과 요약\n\n"
         
         for result in results:
-            grade_color = self._get_grade_color(result.investment_grade)
-            upside_color = "green" if result.upside_potential > 0 else "red"
-            
-            table.add_row(
-                result.symbol,
-                f"[{grade_color}]{result.investment_grade.value}[/{grade_color}]",
-                f"${result.current_price:.2f}",
-                f"${result.target_price:.2f}",
-                f"[{upside_color}]{result.upside_potential:.1f}%[/{upside_color}]",
-                f"{result.value_metrics.pe_ratio:.1f}",
-                f"{result.value_metrics.pb_ratio:.1f}",
-                f"{result.value_metrics.roe:.1%}"
-            )
+            summary += f"종목: {result.symbol}\n"
+            summary += f"등급: {result.investment_grade.value}\n"
+            summary += f"현재가: ${result.current_price:.2f}\n"
+            summary += f"목표가: ${result.target_price:.2f}\n"
+            summary += f"상승여력: {result.upside_potential:.1f}%\n"
+            summary += f"PER: {result.value_metrics.pe_ratio:.1f}\n"
+            summary += f"PBR: {result.value_metrics.pb_ratio:.1f}\n"
+            summary += f"ROE: {result.value_metrics.roe:.1%}\n\n"
         
-        return table
+        return summary
     
     def _get_grade_color(self, grade: InvestmentGrade) -> str:
         """투자 등급에 따른 색상을 반환합니다."""

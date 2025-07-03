@@ -6,12 +6,11 @@ from typing import Dict, List, Optional, Any
 from pathlib import Path
 import markdown
 from jinja2 import Template
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn
+# Rich imports removed for server compatibility
 
 from .value_analyzer import AnalysisResult, InvestmentGrade
 
-console = Console()
+# Console removed for server compatibility
 
 class ReportGenerator:
     def __init__(self, reports_dir: str = "reports"):
@@ -43,13 +42,7 @@ class ReportGenerator:
             str: 생성된 보고서 파일 경로
         """
         try:
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                console=console,
-                transient=True,
-            ) as progress:
-                task = progress.add_task("[cyan]개별 보고서 생성 중...", total=None)
+            print("📝 보고서 생성 중...")
                 
                 # 파일명 생성
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -101,13 +94,7 @@ class ReportGenerator:
             str: 생성된 보고서 파일 경로
         """
         try:
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                console=console,
-                transient=True,
-            ) as progress:
-                task = progress.add_task("[cyan]비교 분석 보고서 생성 중...", total=None)
+            print("📝 보고서 생성 중...")
                 
                 # 파일명 생성
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -161,13 +148,7 @@ class ReportGenerator:
             str: 생성된 보고서 파일 경로
         """
         try:
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                console=console,
-                transient=True,
-            ) as progress:
-                task = progress.add_task("[cyan]요약 보고서 생성 중...", total=None)
+            print("📝 보고서 생성 중...")
                 
                 # 파일명 생성
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
