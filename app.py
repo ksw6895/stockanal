@@ -35,23 +35,49 @@ async def startup_event():
     """애플리케이션 시작 시 초기화"""
     global stock_collector, gemini_client, value_analyzer, report_generator
     
+    print("🚀 애플리케이션 초기화 시작...")
+    
     try:
+        print("📊 주식 데이터 수집기 초기화...")
         stock_collector = StockDataCollector()
+        print("✅ 주식 데이터 수집기 초기화 완료")
+        
+        print("📈 가치 분석기 초기화...")
         value_analyzer = ValueAnalyzer()
+        print("✅ 가치 분석기 초기화 완료")
+        
+        print("📝 보고서 생성기 초기화...")
         report_generator = ReportGenerator()
+        print("✅ 보고서 생성기 초기화 완료")
         
         # Gemini API 클라이언트 초기화
+        print("🤖 Gemini API 클라이언트 초기화...")
         api_key = os.getenv('GOOGLE_API_KEY')
         if api_key:
+            print(f"🔑 API 키 발견 (길이: {len(api_key)})")
             gemini_client = GeminiClient(api_key)
+            print("✅ Gemini 클라이언트 초기화 완료")
+            
             # 연결 테스트
-            if not gemini_client.test_connection():
+            print("🔍 Gemini API 연결 테스트...")
+            if gemini_client.test_connection():
+                print("✅ Gemini API 연결 성공")
+            else:
                 print("⚠️ Gemini API 연결 실패")
         else:
             print("⚠️ Google API 키가 설정되지 않았습니다.")
+            print("📋 환경변수 확인:")
+            for key in os.environ:
+                if 'GOOGLE' in key or 'API' in key:
+                    print(f"  - {key}: {'*' * len(os.environ[key]) if os.environ[key] else 'None'}")
+            
+        print("🎉 애플리케이션 초기화 완료!")
             
     except Exception as e:
         print(f"❌ 초기화 중 오류: {str(e)}")
+        import traceback
+        print(f"📋 상세 오류:")
+        traceback.print_exc()
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -218,9 +244,10 @@ async def validate_symbol(symbol: str):
     """종목 코드 유효성 검사 API"""
     try:
         if not stock_collector:
+            print(f"❌ validate_symbol: stock_collector가 None입니다.")
             return JSONResponse(
                 status_code=500,
-                content={"error": "시스템이 초기화되지 않았습니다."}
+                content={"error": "시스템이 초기화되지 않았습니다. 관리자에게 문의하세요."}
             )
         
         symbol = symbol.upper().strip()
