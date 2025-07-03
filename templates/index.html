@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}AI 주식 가치투자 분석 시스템{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="row align-items-center">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="hero-title">
+                <i class="fas fa-robot text-primary me-3"></i>
+                AI 주식 분석
+            </h1>
+            <p class="hero-subtitle">
+                Gemini 2.5 Flash와 가치투자 철학이 만난 차세대 주식 분석 시스템<br>
+                워렌 버핏과 벤저민 그레이엄의 투자 원칙을 AI가 실시간으로 적용합니다
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="/analyze" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search me-2"></i>지금 분석 시작
+                </a>
+                <a href="/compare" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-balance-scale me-2"></i>종목 비교
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="feature-card text-center">
+            <div class="feature-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h4>AI 기반 분석</h4>
+            <p class="text-muted">
+                Gemini 2.5 Flash의 사고 기능을 활용한 심층적인 기업 분석과 투자 의견 제시
+            </p>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="feature-card text-center">
+            <div class="feature-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h4>실시간 데이터</h4>
+            <p class="text-muted">
+                yfinance를 통한 최신 재무 데이터와 주가 정보를 실시간으로 수집 및 분석
+            </p>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="feature-card text-center">
+            <div class="feature-icon">
+                <i class="fas fa-gem"></i>
+            </div>
+            <h4>가치투자 철학</h4>
+            <p class="text-muted">
+                워렌 버핏과 벤저민 그레이엄의 검증된 가치투자 원칙을 AI가 자동 적용
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics Section -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <div class="feature-card">
+            <h4><i class="fas fa-calculator text-primary me-2"></i>핵심 분석 지표</h4>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <div class="metric-badge">PER</div>
+                    <div class="metric-badge">PBR</div>
+                    <div class="metric-badge">ROE</div>
+                </div>
+                <div class="col-6">
+                    <div class="metric-badge">부채비율</div>
+                    <div class="metric-badge">배당수익률</div>
+                    <div class="metric-badge">성장률</div>
+                </div>
+            </div>
+            <p class="text-muted mt-3 mb-0">
+                가치투자에 필수적인 모든 재무 지표를 종합적으로 분석합니다.
+            </p>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="feature-card">
+            <h4><i class="fas fa-star text-warning me-2"></i>투자 등급</h4>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                <span class="badge bg-success fs-6 grade-strong-buy">Strong Buy</span>
+                <span class="badge bg-success fs-6 grade-buy">Buy</span>
+                <span class="badge bg-warning fs-6 grade-hold">Hold</span>
+                <span class="badge bg-danger fs-6 grade-sell">Sell</span>
+                <span class="badge bg-danger fs-6 grade-strong-sell">Strong Sell</span>
+            </div>
+            <p class="text-muted mt-3 mb-0">
+                AI가 모든 지표를 종합하여 명확한 투자 등급과 신뢰도를 제시합니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- How it Works Section -->
+<div class="feature-card mb-5">
+    <h3 class="text-center mb-4">
+        <i class="fas fa-cogs text-primary me-2"></i>
+        분석 프로세스
+    </h3>
+    <div class="row g-4">
+        <div class="col-md-3 text-center">
+            <div class="feature-icon text-primary">
+                <i class="fas fa-download"></i>
+            </div>
+            <h5>1. 데이터 수집</h5>
+            <p class="text-muted small">실시간 주식 데이터 및 재무 정보 수집</p>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="feature-icon text-success">
+                <i class="fas fa-calculator"></i>
+            </div>
+            <h5>2. 지표 계산</h5>
+            <p class="text-muted small">가치투자 핵심 지표 자동 계산</p>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="feature-icon text-warning">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h5>3. AI 분석</h5>
+            <p class="text-muted small">Gemini 2.5 Flash 심층 분석</p>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="feature-icon text-info">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h5>4. 보고서 생성</h5>
+            <p class="text-muted small">종합적인 투자 의견 제시</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Start Section -->
+<div class="feature-card text-center">
+    <h3><i class="fas fa-rocket text-primary me-2"></i>지금 시작하기</h3>
+    <p class="text-muted mb-4">종목 코드를 입력하고 AI 분석을 경험해보세요</p>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="quickSymbol" placeholder="종목 코드 입력 (예: AAPL, MSFT)" style="font-size: 1.1rem;">
+                <button class="btn btn-primary" type="button" onclick="quickAnalyze()">
+                    <i class="fas fa-search me-1"></i>분석
+                </button>
+            </div>
+            <small class="text-muted">
+                <strong>인기 종목:</strong> 
+                <a href="#" onclick="setSymbol('AAPL')" class="text-decoration-none">AAPL</a>, 
+                <a href="#" onclick="setSymbol('MSFT')" class="text-decoration-none">MSFT</a>, 
+                <a href="#" onclick="setSymbol('GOOGL')" class="text-decoration-none">GOOGL</a>, 
+                <a href="#" onclick="setSymbol('TSLA')" class="text-decoration-none">TSLA</a>
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function setSymbol(symbol) {
+    document.getElementById('quickSymbol').value = symbol;
+}
+
+function quickAnalyze() {
+    const symbol = document.getElementById('quickSymbol').value.trim();
+    if (symbol) {
+        window.location.href = `/analyze?symbol=${encodeURIComponent(symbol)}`;
+    } else {
+        alert('종목 코드를 입력해주세요.');
+    }
+}
+
+// Enter 키 처리
+document.getElementById('quickSymbol').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        quickAnalyze();
+    }
+});
+
+// 페이지 로드 시 애니메이션
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.feature-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

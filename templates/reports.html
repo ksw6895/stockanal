@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}분석 보고서 - AI 주식 분석{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="text-center mb-5">
+        <h2><i class="fas fa-file-alt text-primary me-2"></i>분석 보고서</h2>
+        <p class="text-muted">AI가 생성한 주식 분석 보고서를 확인하고 관리하세요</p>
+    </div>
+
+    <!-- Coming Soon Card -->
+    <div class="feature-card text-center">
+        <div class="feature-icon text-info">
+            <i class="fas fa-tools"></i>
+        </div>
+        <h4>보고서 관리 기능 개발 중</h4>
+        <p class="text-muted mb-4">
+            곧 다음 기능들이 추가될 예정입니다:
+        </p>
+        
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-save text-primary fs-2 mb-3"></i>
+                        <h6>보고서 저장</h6>
+                        <p class="text-muted small">분석 결과를 PDF, Excel 형태로 저장</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-history text-success fs-2 mb-3"></i>
+                        <h6>분석 히스토리</h6>
+                        <p class="text-muted small">과거 분석 결과 조회 및 비교</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-bell text-warning fs-2 mb-3"></i>
+                        <h6>알림 설정</h6>
+                        <p class="text-muted small">주가 변동 및 등급 변경 알림</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fas fa-chart-pie text-info fs-2 mb-3"></i>
+                        <h6>포트폴리오 추적</h6>
+                        <p class="text-muted small">관심 종목 포트폴리오 관리</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="/analyze" class="btn btn-primary me-2">
+                <i class="fas fa-search me-1"></i>개별 분석 시작
+            </a>
+            <a href="/compare" class="btn btn-outline-primary">
+                <i class="fas fa-balance-scale me-1"></i>비교 분석 시작
+            </a>
+        </div>
+    </div>
+
+    <!-- Current Session Analysis -->
+    <div class="feature-card">
+        <h4><i class="fas fa-clock text-primary me-2"></i>현재 세션 분석 결과</h4>
+        <p class="text-muted">현재 브라우저 세션에서 수행한 분석 결과입니다.</p>
+        
+        <div id="sessionResults">
+            <div class="text-center text-muted py-4">
+                <i class="fas fa-inbox fs-1 mb-3"></i>
+                <p>아직 분석을 수행하지 않았습니다.</p>
+                <p class="small">개별 분석 또는 비교 분석을 수행하면 여기에 결과가 표시됩니다.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 세션 스토리지에서 분석 결과 불러오기
+document.addEventListener('DOMContentLoaded', function() {
+    loadSessionResults();
+});
+
+function loadSessionResults() {
+    const sessionContainer = document.getElementById('sessionResults');
+    const analysisHistory = JSON.parse(sessionStorage.getItem('analysisHistory') || '[]');
+    
+    if (analysisHistory.length === 0) {
+        return; // 기본 메시지 유지
+    }
+    
+    sessionContainer.innerHTML = '';
+    
+    analysisHistory.forEach((analysis, index) => {
+        const resultCard = document.createElement('div');
+        resultCard.className = 'card mb-3';
+        resultCard.innerHTML = `
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h6 class="mb-1">
+                            ${analysis.type === 'individual' ? 
+                                `${analysis.symbol} - ${analysis.company_name || analysis.symbol}` :
+                                `비교 분석: ${analysis.symbols.join(', ')}`
+                            }
+                        </h6>
+                        <small class="text-muted">${new Date(analysis.timestamp).toLocaleString()}</small>
+                    </div>
+                    <div class="col-md-3">
+                        ${analysis.type === 'individual' ? 
+                            `<span class="grade-${analysis.investment_grade.toLowerCase().replace(' ', '-')}">${analysis.investment_grade}</span>` :
+                            `<span class="text-info">${analysis.symbols.length}개 종목 비교</span>`
+                        }
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <button class="btn btn-outline-primary btn-sm" onclick="viewAnalysis(${index})">
+                            <i class="fas fa-eye me-1"></i>보기
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm ms-1" onclick="deleteAnalysis(${index})">
+                            <i class="fas fa-trash me-1"></i>삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        sessionContainer.appendChild(resultCard);
+    });
+}
+
+function viewAnalysis(index) {
+    const analysisHistory = JSON.parse(sessionStorage.getItem('analysisHistory') || '[]');
+    const analysis = analysisHistory[index];
+    
+    if (analysis.type === 'individual') {
+        window.open(`/analyze?symbol=${analysis.symbol}`, '_blank');
+    } else {
+        window.open(`/compare?symbols=${analysis.symbols.join(',')}`, '_blank');
+    }
+}
+
+function deleteAnalysis(index) {
+    if (confirm('이 분석 결과를 삭제하시겠습니까?')) {
+        const analysisHistory = JSON.parse(sessionStorage.getItem('analysisHistory') || '[]');
+        analysisHistory.splice(index, 1);
+        sessionStorage.setItem('analysisHistory', JSON.stringify(analysisHistory));
+        loadSessionResults();
+    }
+}
+
+function clearAllAnalysis() {
+    if (confirm('모든 분석 결과를 삭제하시겠습니까?')) {
+        sessionStorage.removeItem('analysisHistory');
+        loadSessionResults();
+    }
+}
+
+// 분석 결과를 세션 스토리지에 저장하는 함수 (다른 페이지에서 호출)
+function saveAnalysisToSession(analysisData) {
+    const analysisHistory = JSON.parse(sessionStorage.getItem('analysisHistory') || '[]');
+    const analysisRecord = {
+        timestamp: new Date().toISOString(),
+        type: analysisData.type || 'individual',
+        ...analysisData
+    };
+    
+    analysisHistory.unshift(analysisRecord); // 최신 항목을 맨 앞에 추가
+    
+    // 최대 20개까지만 보관
+    if (analysisHistory.length > 20) {
+        analysisHistory.splice(20);
+    }
+    
+    sessionStorage.setItem('analysisHistory', JSON.stringify(analysisHistory));
+}
+
+// 전역 함수로 등록 (다른 페이지에서 사용)
+window.saveAnalysisToSession = saveAnalysisToSession;
+</script>
+{% endblock %}
