@@ -50,34 +50,48 @@ async def startup_event():
         report_generator = ReportGenerator()
         print("✅ 보고서 생성기 초기화 완료")
         
-        # Gemini API 클라이언트 초기화
+        # Gemini API 클라이언트 초기화 (API 키가 없어도 진행)
         print("🤖 Gemini API 클라이언트 초기화...")
         api_key = os.getenv('GOOGLE_API_KEY')
         if api_key:
             print(f"🔑 API 키 발견 (길이: {len(api_key)})")
-            gemini_client = GeminiClient(api_key)
-            print("✅ Gemini 클라이언트 초기화 완료")
-            
-            # 연결 테스트
-            print("🔍 Gemini API 연결 테스트...")
-            if gemini_client.test_connection():
-                print("✅ Gemini API 연결 성공")
-            else:
-                print("⚠️ Gemini API 연결 실패")
+            try:
+                gemini_client = GeminiClient(api_key)
+                print("✅ Gemini 클라이언트 초기화 완료")
+                
+                # 연결 테스트 (실패해도 계속 진행)
+                print("🔍 Gemini API 연결 테스트...")
+                if gemini_client.test_connection():
+                    print("✅ Gemini API 연결 성공")
+                else:
+                    print("⚠️ Gemini API 연결 실패 - 계속 진행")
+            except Exception as gemini_error:
+                print(f"❌ Gemini 클라이언트 초기화 실패: {str(gemini_error)}")
+                gemini_client = None
         else:
             print("⚠️ Google API 키가 설정되지 않았습니다.")
             print("📋 환경변수 확인:")
             for key in os.environ:
                 if 'GOOGLE' in key or 'API' in key:
                     print(f"  - {key}: {'*' * len(os.environ[key]) if os.environ[key] else 'None'}")
+            gemini_client = None
             
         print("🎉 애플리케이션 초기화 완료!")
+        print(f"🔍 최종 상태 - stock_collector: {stock_collector is not None}, gemini_client: {gemini_client is not None}, value_analyzer: {value_analyzer is not None}")
             
     except Exception as e:
-        print(f"❌ 초기화 중 오류: {str(e)}")
+        print(f"❌ 초기화 중 치명적 오류: {str(e)}")
         import traceback
         print(f"📋 상세 오류:")
         traceback.print_exc()
+        
+        # 최소한 stock_collector라도 초기화
+        try:
+            if stock_collector is None:
+                stock_collector = StockDataCollector()
+                print("🔧 긴급 복구: stock_collector 초기화")
+        except:
+            print("💥 긴급 복구도 실패")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -96,25 +110,46 @@ async def analyze_stock(
 ):
     """주식 분석 API"""
     try:
-        # 상세한 초기화 상태 확인
+        # 상세한 초기화 상태 확인 및 lazy initialization
+        global stock_collector, gemini_client, value_analyzer
+        
         print(f"🔍 API 호출 - Symbol: {symbol}")
         print(f"🔍 stock_collector: {stock_collector is not None}")
         print(f"🔍 gemini_client: {gemini_client is not None}")
         print(f"🔍 value_analyzer: {value_analyzer is not None}")
         
-        if not all([stock_collector, gemini_client, value_analyzer]):
-            error_details = {
-                "stock_collector": stock_collector is not None,
-                "gemini_client": gemini_client is not None,
-                "value_analyzer": value_analyzer is not None
-            }
-            print(f"❌ 초기화 실패 상세: {error_details}")
+        # Lazy initialization 시도
+        if stock_collector is None:
+            print("🔧 Lazy initialization - stock_collector")
+            try:
+                stock_collector = StockDataCollector()
+                print("✅ stock_collector 긴급 초기화 성공")
+            except Exception as e:
+                print(f"❌ stock_collector 긴급 초기화 실패: {e}")
+                
+        if value_analyzer is None:
+            print("🔧 Lazy initialization - value_analyzer")
+            try:
+                value_analyzer = ValueAnalyzer()
+                print("✅ value_analyzer 긴급 초기화 성공")
+            except Exception as e:
+                print(f"❌ value_analyzer 긴급 초기화 실패: {e}")
+                
+        if gemini_client is None:
+            print("🔧 Lazy initialization - gemini_client")
+            try:
+                api_key = os.getenv('GOOGLE_API_KEY')
+                if api_key:
+                    gemini_client = GeminiClient(api_key)
+                    print("✅ gemini_client 긴급 초기화 성공")
+            except Exception as e:
+                print(f"❌ gemini_client 긴급 초기화 실패: {e}")
+        
+        # 최소 요구사항 확인 (gemini_client 없이도 기본 분석은 가능)
+        if not stock_collector:
             return JSONResponse(
                 status_code=500,
-                content={
-                    "error": "시스템이 초기화되지 않았습니다.",
-                    "details": error_details
-                }
+                content={"error": "주식 데이터 수집기를 초기화할 수 없습니다."}
             )
         
         # 1. 주식 데이터 수집
