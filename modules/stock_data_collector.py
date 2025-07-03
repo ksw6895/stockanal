@@ -23,48 +23,48 @@ class StockDataCollector:
         try:
             print(f"📊 {symbol} 데이터 수집 중...")
             stock = yf.Ticker(symbol)
-                
-                # 기본 정보
-                info = stock.info
-                if not info:
-                    raise ValueError(f"종목 {symbol}의 정보를 찾을 수 없습니다.")
-                
-                # 주가 데이터
-                hist = stock.history(period=period)
-                if hist.empty:
-                    raise ValueError(f"종목 {symbol}의 주가 데이터를 찾을 수 없습니다.")
-                
-                # 재무제표 데이터
-                financials = stock.financials
-                balance_sheet = stock.balance_sheet
-                cashflow = stock.cashflow
-                
-                # 배당 정보
-                dividends = stock.dividends
-                
-                # 주요 재무 지표 계산
-                financial_metrics = self._calculate_financial_metrics(
-                    info, hist, financials, balance_sheet, cashflow, dividends
-                )
-                
-                progress.update(task, description=f"[green]{symbol} 데이터 수집 완료")
-                
-                return {
-                    'symbol': symbol,
-                    'company_name': info.get('longName', symbol),
-                    'sector': info.get('sector', 'Unknown'),
-                    'industry': info.get('industry', 'Unknown'),
-                    'market_cap': info.get('marketCap', 0),
-                    'current_price': hist['Close'].iloc[-1] if not hist.empty else 0,
-                    'basic_info': info,
-                    'price_history': hist,
-                    'financials': financials,
-                    'balance_sheet': balance_sheet,
-                    'cashflow': cashflow,
-                    'dividends': dividends,
-                    'financial_metrics': financial_metrics,
-                    'data_collected_at': datetime.now().isoformat()
-                }
+            
+            # 기본 정보
+            info = stock.info
+            if not info:
+                raise ValueError(f"종목 {symbol}의 정보를 찾을 수 없습니다.")
+            
+            # 주가 데이터
+            hist = stock.history(period=period)
+            if hist.empty:
+                raise ValueError(f"종목 {symbol}의 주가 데이터를 찾을 수 없습니다.")
+            
+            # 재무제표 데이터
+            financials = stock.financials
+            balance_sheet = stock.balance_sheet
+            cashflow = stock.cashflow
+            
+            # 배당 정보
+            dividends = stock.dividends
+            
+            # 주요 재무 지표 계산
+            financial_metrics = self._calculate_financial_metrics(
+                info, hist, financials, balance_sheet, cashflow, dividends
+            )
+            
+            print(f"✅ {symbol} 데이터 수집 완료")
+            
+            return {
+                'symbol': symbol,
+                'company_name': info.get('longName', symbol),
+                'sector': info.get('sector', 'Unknown'),
+                'industry': info.get('industry', 'Unknown'),
+                'market_cap': info.get('marketCap', 0),
+                'current_price': hist['Close'].iloc[-1] if not hist.empty else 0,
+                'basic_info': info,
+                'price_history': hist,
+                'financials': financials,
+                'balance_sheet': balance_sheet,
+                'cashflow': cashflow,
+                'dividends': dividends,
+                'financial_metrics': financial_metrics,
+                'data_collected_at': datetime.now().isoformat()
+            }
                 
         except Exception as e:
             self.logger.error(f"데이터 수집 중 오류 발생 ({symbol}): {str(e)}")

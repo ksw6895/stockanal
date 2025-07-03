@@ -25,11 +25,11 @@ class ReportGenerator:
             'summary_report': self._get_summary_report_template()
         }
         
-        console.print(f"[green]보고서 생성기 초기화 완료 (저장 경로: {self.reports_dir})[/green]")
+        print(f"보고서 생성기 초기화 완료 (저장 경로: {self.reports_dir})")
     
     def generate_individual_report(self, analysis_result: AnalysisResult, 
-                                 ai_analysis: str, 
-                                 format_type: str = "markdown") -> str:
+            ai_analysis: str, 
+            format_type: str = "markdown") -> str:
         """
         개별 종목 분석 보고서를 생성합니다.
         
@@ -43,45 +43,45 @@ class ReportGenerator:
         """
         try:
             print("📝 보고서 생성 중...")
-                
-                # 파일명 생성
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"{analysis_result.symbol}_analysis_{timestamp}.{format_type}"
-                filepath = self.reports_dir / filename
-                
-                # 보고서 데이터 준비
-                report_data = {
-                    'analysis_result': analysis_result.to_dict(),
-                    'ai_analysis': ai_analysis,
-                    'generated_at': datetime.now().isoformat(),
-                    'report_type': 'individual'
-                }
-                
-                # 형식에 따라 보고서 생성
-                if format_type == "json":
-                    content = self._generate_json_report(report_data)
-                elif format_type == "html":
-                    content = self._generate_html_report(report_data, 'individual_report')
-                else:  # markdown (기본값)
-                    content = self._generate_markdown_report(report_data, 'individual_report')
-                
-                # 파일 저장
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    f.write(content)
-                
-                progress.update(task, description=f"[green]보고서 생성 완료: {filename}")
-                
-                console.print(f"[green]✓ 개별 보고서 저장됨: {filepath}[/green]")
-                
-                return str(filepath)
-                
+            
+            # 파일명 생성
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"{analysis_result.symbol}_analysis_{timestamp}.{format_type}"
+            filepath = self.reports_dir / filename
+            
+            # 보고서 데이터 준비
+            report_data = {
+            'analysis_result': analysis_result.to_dict(),
+            'ai_analysis': ai_analysis,
+            'generated_at': datetime.now().isoformat(),
+            'report_type': 'individual'
+            }
+            
+            # 형식에 따라 보고서 생성
+            if format_type == "json":
+            content = self._generate_json_report(report_data)
+            elif format_type == "html":
+            content = self._generate_html_report(report_data, 'individual_report')
+            else:  # markdown (기본값)
+            content = self._generate_markdown_report(report_data, 'individual_report')
+            
+            # 파일 저장
+            with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+            
+            print(f"보고서 생성 완료: {filename}")
+            
+            print(f"✓ 개별 보고서 저장됨: {filepath}")
+            
+            return str(filepath)
+            
         except Exception as e:
             self.logger.error(f"개별 보고서 생성 중 오류: {str(e)}")
             raise Exception(f"보고서 생성 실패: {str(e)}")
     
     def generate_comparison_report(self, analysis_results: List[AnalysisResult], 
-                                 ai_analysis: str, 
-                                 format_type: str = "markdown") -> str:
+            ai_analysis: str, 
+            format_type: str = "markdown") -> str:
         """
         비교 분석 보고서를 생성합니다.
         
@@ -95,47 +95,47 @@ class ReportGenerator:
         """
         try:
             print("📝 보고서 생성 중...")
-                
-                # 파일명 생성
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                symbols = "_vs_".join([result.symbol for result in analysis_results])
-                filename = f"comparison_{symbols}_{timestamp}.{format_type}"
-                filepath = self.reports_dir / filename
-                
-                # 보고서 데이터 준비
-                report_data = {
-                    'analysis_results': [result.to_dict() for result in analysis_results],
-                    'ai_analysis': ai_analysis,
-                    'generated_at': datetime.now().isoformat(),
-                    'report_type': 'comparison',
-                    'symbols': [result.symbol for result in analysis_results]
-                }
-                
-                # 형식에 따라 보고서 생성
-                if format_type == "json":
-                    content = self._generate_json_report(report_data)
-                elif format_type == "html":
-                    content = self._generate_html_report(report_data, 'comparison_report')
-                else:  # markdown (기본값)
-                    content = self._generate_markdown_report(report_data, 'comparison_report')
-                
-                # 파일 저장
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    f.write(content)
-                
-                progress.update(task, description=f"[green]비교 보고서 생성 완료: {filename}")
-                
-                console.print(f"[green]✓ 비교 분석 보고서 저장됨: {filepath}[/green]")
-                
-                return str(filepath)
-                
+            
+            # 파일명 생성
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            symbols = "_vs_".join([result.symbol for result in analysis_results])
+            filename = f"comparison_{symbols}_{timestamp}.{format_type}"
+            filepath = self.reports_dir / filename
+            
+            # 보고서 데이터 준비
+            report_data = {
+            'analysis_results': [result.to_dict() for result in analysis_results],
+            'ai_analysis': ai_analysis,
+            'generated_at': datetime.now().isoformat(),
+            'report_type': 'comparison',
+            'symbols': [result.symbol for result in analysis_results]
+            }
+            
+            # 형식에 따라 보고서 생성
+            if format_type == "json":
+            content = self._generate_json_report(report_data)
+            elif format_type == "html":
+            content = self._generate_html_report(report_data, 'comparison_report')
+            else:  # markdown (기본값)
+            content = self._generate_markdown_report(report_data, 'comparison_report')
+            
+            # 파일 저장
+            with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+            
+            print(f"비교 보고서 생성 완료: {filename}")
+            
+            print(f"✓ 비교 분석 보고서 저장됨: {filepath}")
+            
+            return str(filepath)
+            
         except Exception as e:
             self.logger.error(f"비교 보고서 생성 중 오류: {str(e)}")
             raise Exception(f"비교 보고서 생성 실패: {str(e)}")
     
     def generate_summary_report(self, analysis_results: List[AnalysisResult], 
-                              additional_info: Optional[Dict] = None,
-                              format_type: str = "markdown") -> str:
+            additional_info: Optional[Dict] = None,
+            format_type: str = "markdown") -> str:
         """
         요약 보고서를 생성합니다.
         
@@ -149,42 +149,42 @@ class ReportGenerator:
         """
         try:
             print("📝 보고서 생성 중...")
-                
-                # 파일명 생성
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"summary_report_{timestamp}.{format_type}"
-                filepath = self.reports_dir / filename
-                
-                # 요약 통계 계산
-                summary_stats = self._calculate_summary_stats(analysis_results)
-                
-                # 보고서 데이터 준비
-                report_data = {
-                    'analysis_results': [result.to_dict() for result in analysis_results],
-                    'summary_stats': summary_stats,
-                    'additional_info': additional_info or {},
-                    'generated_at': datetime.now().isoformat(),
-                    'report_type': 'summary'
-                }
-                
-                # 형식에 따라 보고서 생성
-                if format_type == "json":
-                    content = self._generate_json_report(report_data)
-                elif format_type == "html":
-                    content = self._generate_html_report(report_data, 'summary_report')
-                else:  # markdown (기본값)
-                    content = self._generate_markdown_report(report_data, 'summary_report')
-                
-                # 파일 저장
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    f.write(content)
-                
-                progress.update(task, description=f"[green]요약 보고서 생성 완료: {filename}")
-                
-                console.print(f"[green]✓ 요약 보고서 저장됨: {filepath}[/green]")
-                
-                return str(filepath)
-                
+            
+            # 파일명 생성
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"summary_report_{timestamp}.{format_type}"
+            filepath = self.reports_dir / filename
+            
+            # 요약 통계 계산
+            summary_stats = self._calculate_summary_stats(analysis_results)
+            
+            # 보고서 데이터 준비
+            report_data = {
+            'analysis_results': [result.to_dict() for result in analysis_results],
+            'summary_stats': summary_stats,
+            'additional_info': additional_info or {},
+            'generated_at': datetime.now().isoformat(),
+            'report_type': 'summary'
+            }
+            
+            # 형식에 따라 보고서 생성
+            if format_type == "json":
+            content = self._generate_json_report(report_data)
+            elif format_type == "html":
+            content = self._generate_html_report(report_data, 'summary_report')
+            else:  # markdown (기본값)
+            content = self._generate_markdown_report(report_data, 'summary_report')
+            
+            # 파일 저장
+            with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+            
+            print(f"요약 보고서 생성 완료: {filename}")
+            
+            print(f"✓ 요약 보고서 저장됨: {filepath}")
+            
+            return str(filepath)
+            
         except Exception as e:
             self.logger.error(f"요약 보고서 생성 중 오류: {str(e)}")
             raise Exception(f"요약 보고서 생성 실패: {str(e)}")
@@ -515,13 +515,13 @@ class ReportGenerator:
             file_path = self.reports_dir / filename
             if file_path.exists():
                 file_path.unlink()
-                console.print(f"[green]✓ 보고서 삭제됨: {filename}[/green]")
+                print(f"✓ 보고서 삭제됨: {filename}")
                 return True
             else:
-                console.print(f"[red]✗ 파일을 찾을 수 없음: {filename}[/red]")
+                print(f"✗ 파일을 찾을 수 없음: {filename}")
                 return False
         except Exception as e:
-            console.print(f"[red]✗ 파일 삭제 실패: {str(e)}[/red]")
+            print(f"✗ 파일 삭제 실패: {str(e)}")
             return False
     
     def get_report_content(self, filename: str) -> Optional[str]:
