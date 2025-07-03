@@ -59,15 +59,15 @@ class ReportGenerator:
             
             # 형식에 따라 보고서 생성
             if format_type == "json":
-            content = self._generate_json_report(report_data)
+                content = self._generate_json_report(report_data)
             elif format_type == "html":
-            content = self._generate_html_report(report_data, 'individual_report')
+                content = self._generate_html_report(report_data, 'individual_report')
             else:  # markdown (기본값)
-            content = self._generate_markdown_report(report_data, 'individual_report')
+                content = self._generate_markdown_report(report_data, 'individual_report')
             
             # 파일 저장
             with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(content)
+                f.write(content)
             
             print(f"보고서 생성 완료: {filename}")
             
@@ -113,15 +113,15 @@ class ReportGenerator:
             
             # 형식에 따라 보고서 생성
             if format_type == "json":
-            content = self._generate_json_report(report_data)
+                content = self._generate_json_report(report_data)
             elif format_type == "html":
-            content = self._generate_html_report(report_data, 'comparison_report')
+                content = self._generate_html_report(report_data, 'comparison_report')
             else:  # markdown (기본값)
-            content = self._generate_markdown_report(report_data, 'comparison_report')
+                content = self._generate_markdown_report(report_data, 'comparison_report')
             
             # 파일 저장
             with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(content)
+                f.write(content)
             
             print(f"비교 보고서 생성 완료: {filename}")
             
@@ -169,15 +169,15 @@ class ReportGenerator:
             
             # 형식에 따라 보고서 생성
             if format_type == "json":
-            content = self._generate_json_report(report_data)
+                content = self._generate_json_report(report_data)
             elif format_type == "html":
-            content = self._generate_html_report(report_data, 'summary_report')
+                content = self._generate_html_report(report_data, 'summary_report')
             else:  # markdown (기본값)
-            content = self._generate_markdown_report(report_data, 'summary_report')
+                content = self._generate_markdown_report(report_data, 'summary_report')
             
             # 파일 저장
             with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(content)
+                f.write(content)
             
             print(f"요약 보고서 생성 완료: {filename}")
             
