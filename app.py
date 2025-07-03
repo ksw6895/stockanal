@@ -96,16 +96,36 @@ async def analyze_stock(
 ):
     """주식 분석 API"""
     try:
+        # 상세한 초기화 상태 확인
+        print(f"🔍 API 호출 - Symbol: {symbol}")
+        print(f"🔍 stock_collector: {stock_collector is not None}")
+        print(f"🔍 gemini_client: {gemini_client is not None}")
+        print(f"🔍 value_analyzer: {value_analyzer is not None}")
+        
         if not all([stock_collector, gemini_client, value_analyzer]):
+            error_details = {
+                "stock_collector": stock_collector is not None,
+                "gemini_client": gemini_client is not None,
+                "value_analyzer": value_analyzer is not None
+            }
+            print(f"❌ 초기화 실패 상세: {error_details}")
             return JSONResponse(
                 status_code=500,
-                content={"error": "시스템이 초기화되지 않았습니다."}
+                content={
+                    "error": "시스템이 초기화되지 않았습니다.",
+                    "details": error_details
+                }
             )
         
         # 1. 주식 데이터 수집
         symbol = symbol.upper().strip()
+        print(f"🔍 Validating symbol: {symbol}")
         
-        if not stock_collector.validate_symbol(symbol):
+        validation_result = stock_collector.validate_symbol(symbol)
+        print(f"🔍 Validation result for {symbol}: {validation_result}")
+        
+        if not validation_result:
+            print(f"❌ Symbol validation failed for: {symbol}")
             return JSONResponse(
                 status_code=400,
                 content={"error": f"유효하지 않은 종목 코드: {symbol}"}

@@ -197,10 +197,27 @@ class StockDataCollector:
     def validate_symbol(self, symbol: str) -> bool:
         """종목 코드가 유효한지 확인합니다."""
         try:
+            print(f"🔍 Validating symbol: {symbol}")
             stock = yf.Ticker(symbol)
+            print(f"🔍 Ticker created for: {symbol}")
+            
             info = stock.info
-            return bool(info and 'symbol' in info)
-        except:
+            print(f"🔍 Info retrieved for {symbol}, keys count: {len(info) if info else 0}")
+            
+            if info:
+                has_symbol = 'symbol' in info
+                print(f"🔍 Has 'symbol' key: {has_symbol}")
+                if has_symbol:
+                    print(f"🔍 Symbol value: {info['symbol']}")
+                result = bool(info and has_symbol)
+                print(f"🔍 Final validation result for {symbol}: {result}")
+                return result
+            else:
+                print(f"❌ No info retrieved for {symbol}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ Validation error for {symbol}: {str(e)}")
             return False
     
     def search_similar_symbols(self, query: str) -> List[str]:
